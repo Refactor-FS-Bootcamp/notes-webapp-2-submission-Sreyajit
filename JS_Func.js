@@ -1,12 +1,15 @@
 let skills = document.querySelector(".skills");
 let submitButton = document.querySelector(".submitButton");
+let backUpButton = document.querySelector(".backUpButton");
 submitButton.addEventListener("click", createObject);
+backUpButton.addEventListener("click", BackupObject);
 let title = document.getElementById("name");
 let description = document.getElementById("Query");
 let date = document.getElementById("Number");
 let objectArray = [];
+localStorage.setItem("array", JSON.stringify(objectArray));
 let object = {};
-let noOfPosts = 0;
+let objectTime;
 postSpace();
 function createObject() {
 	object = {
@@ -15,7 +18,9 @@ function createObject() {
 		date: date.value,
 	};
 	if (object.title !== "" && object.description !== "" && object.date !== "") {
-		object.id = `${++noOfPosts}`;
+		object.objectTime = new Date().getTime();
+		object.id = object.objectTime + Math.floor(Math.random() * 10000);
+		object.isDeleted = false;
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
 	} else {
@@ -24,14 +29,27 @@ function createObject() {
 	postSpace();
 }
 function postSpace() {
-	let variable = JSON.parse(localStorage.getItem("array"));
-	if (variable == null || variable.length == 0) {
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	if (
+		objectArray == null ||
+		objectArray.every((object) => object.isDeleted == true)
+	) {
 		noObjectPresent();
-		noOfPosts = 0;
 	} else {
 		skills.innerHTML = "";
-		variable.forEach((element) => {
-			cardCreator(element);
+		objectArray.sort((a, b) => {
+			if (a.objectTime > b.objectTime) {
+				return -1;
+			} else if (a.objectTime < b.objectTime) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
+		objectArray.forEach((element) => {
+			if (element.isDeleted == false) {
+				cardCreator(element);
+			}
 		});
 	}
 }
@@ -73,19 +91,19 @@ function noObjectPresent() {
 }
 function deleteObject(object) {
 	alert("are you sure you want to delete?");
-	noOfPosts--;
-	let variable = JSON.parse(localStorage.getItem("array"));
-	indexToDelete = variable.findIndex((element) => element.id === object.id);
-	variable.splice(indexToDelete, 1);
-	objectArray = [...variable];
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	indexToDelete = objectArray.findIndex((element) => element.id === object.id);
+	objectArray[indexToDelete].isDeleted = true;
 	localStorage.setItem("array", JSON.stringify(objectArray));
 	postSpace();
 }
 function editObject(object) {
 	alert("Are you sure you want to edit the post?");
-	let variable = JSON.parse(localStorage.getItem("array"));
-	let id = object.id;
-	indexToEdit = variable.findIndex((element) => element.id === id);
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	objectTime = object.objectTime;
+	indexToEdit = objectArray.findIndex(
+		(element) => element.objectTime === objectTime
+	);
 	title.focus();
 	title.placeholder = "Edit title here";
 	description.placeholder = "Edit description here";
@@ -97,15 +115,15 @@ function editObject(object) {
 			title: title.value,
 			description: description.value,
 			date: date.value,
-			id: id,
 		};
 		if (
 			object.title !== "" &&
 			object.description !== "" &&
 			object.date !== ""
 		) {
-			variable[indexToEdit] = object;
-			localStorage.setItem("array", JSON.stringify(variable));
+			object.objectTime = new Date().getTime();
+			objectArray[indexToEdit] = object;
+			localStorage.setItem("array", JSON.stringify(objectArray));
 			title.placeholder = "Write the title";
 			description.placeholder = "Write the description";
 			date.placeholder = "Give the date";
@@ -115,4 +133,17 @@ function editObject(object) {
 		}
 		postSpace();
 	});
+}
+function BackupObject() {
+	alert("are you sure you want to bring back the deleted posts?");
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	console.log(objectArray);
+	objectArray.forEach((object) => {
+		if (object.isDeleted == true) {
+			object.isDeleted = false;
+		}
+	});
+	console.log(objectArray);
+	localStorage.setItem("array", JSON.stringify(objectArray));
+	postSpace();
 }
