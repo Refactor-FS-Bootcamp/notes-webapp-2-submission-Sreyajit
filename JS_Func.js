@@ -2,10 +2,13 @@ let skills = document.querySelector(".skills");
 let submitButton = document.querySelector(".submitButton");
 let backUpButton = document.querySelector(".backUpButton");
 let deleteButton = document.querySelector(".deleteButton");
+let archiveButton = document.querySelector(".archiveButton");
+let showAllButton = document.querySelector(".showAllButton");
 let searchButton = document.querySelector(".searchButton");
 submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
+archiveButton.addEventListener("click", archiveObject);
 let objectArray = [];
 addEventListener("beforeunload", () => {
 	localStorage.setItem("array", JSON.stringify(objectArray));
@@ -31,6 +34,7 @@ function createObject() {
 		object.id = object.objectTime + Math.floor(Math.random() * 10000);
 		object.isChecked = false;
 		object.isEdited = false;
+		object.isArchived = false;
 		objectArray = JSON.parse(localStorage.getItem("array"));
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
@@ -41,13 +45,31 @@ function createObject() {
 }
 function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
-
-	if (
-		objectArray == null ||
-		objectArray.every((object) => object.isChecked == true)
-	) {
-		noObjectPresent();
+	let allDeleted = objectArray.every((object) => object.isChecked == true);
+	let noneDeleted = objectArray.every((object) => object.isChecked == false);
+	let nullOrNot = objectArray == null;
+	if (nullOrNot) {
+		deleteButton.style.display = "none";
+		showAllButton.style.display = "none";
+		archiveButton.style.display = "none";
+		backUpButton.style.display = "none";
 	} else {
+		if (allDeleted) {
+			deleteButton.style.display = "none";
+			showAllButton.style.display = "none";
+			archiveButton.style.display = "none";
+			backUpButton.style.display = "flex";
+		} else if (noneDeleted) {
+			deleteButton.style.display = "flex";
+			showAllButton.style.display = "flex";
+			archiveButton.style.display = "flex";
+			backUpButton.style.display = "none";
+		} else {
+			deleteButton.style.display = "flex";
+			showAllButton.style.display = "flex";
+			archiveButton.style.display = "flex";
+			backUpButton.style.display = "flex";
+		}
 		skills.innerHTML = "";
 		objectArray.sort((a, b) => {
 			if (a.objectTime > b.objectTime) {
