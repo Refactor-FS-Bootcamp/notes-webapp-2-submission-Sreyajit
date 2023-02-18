@@ -19,6 +19,14 @@
 				<a href="#">upgrade your browser</a> to improve your experience.</p
 			>
 		<![endif]-->
+		<div class="searchSection">
+			<input
+				type="search"
+				name="search"
+				id="search"
+				placeholder="type to search notes by title" />
+			<input type="button" value="search" class="searchButton" />
+		</div>
 		<form>
 			<h2>Title:</h2>
 			<label for="name">
@@ -50,9 +58,11 @@
 					placeholder="Give date here"
 					required />
 			</label>
-			<input type="button" value="Submit" id="button" class="submitButton" />
-			<input type="button" value="Back Up" id="button" class="backUpButton" />
-			<input type="button" value="Delete" id="button" class="deleteButton" />
+			<div class="buttons">
+				<input type="button" value="Submit" id="button" class="submitButton" />
+				<input type="button" value="Back Up" id="button" class="backUpButton" />
+				<input type="button" value="Delete" id="button" class="deleteButton" />
+			</div>
 		</form>
 		<div class="skills"> </div>
 		<script src="JS_Func.js"></script>

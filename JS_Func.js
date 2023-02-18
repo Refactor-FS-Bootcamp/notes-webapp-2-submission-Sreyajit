@@ -2,18 +2,22 @@ let skills = document.querySelector(".skills");
 let submitButton = document.querySelector(".submitButton");
 let backUpButton = document.querySelector(".backUpButton");
 let deleteButton = document.querySelector(".deleteButton");
+let searchButton = document.querySelector(".searchButton");
 submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
+let objectArray = [];
+postSpace();
+searchButton.addEventListener("click", () =>
+	postSearchSpace(document.querySelector("#search").value)
+);
 let title = document.getElementById("name");
 let description = document.getElementById("Query");
 let date = document.getElementById("Number");
-let objectArray = [];
-localStorage.setItem("array", JSON.stringify(objectArray));
 let object = {};
 let objectTime;
-postSpace();
 function createObject() {
+	localStorage.setItem("array", JSON.stringify(objectArray));
 	object = {
 		title: title.value,
 		description: description.value,
@@ -23,6 +27,7 @@ function createObject() {
 		object.objectTime = new Date().getTime();
 		object.id = object.objectTime + Math.floor(Math.random() * 10000);
 		object.isChecked = false;
+		objectArray = JSON.parse(localStorage.getItem("array"));
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
 	} else {
@@ -34,7 +39,7 @@ function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
 	if (
 		objectArray == null ||
-		objectArray.every((object) => object.isDeleted == true)
+		objectArray.every((object) => object.isChecked == true)
 	) {
 		noObjectPresent();
 	} else {
@@ -149,4 +154,26 @@ function cardChecked(object) {
 	);
 	objectArray[indexToCheck].isChecked = !objectArray[indexToCheck].isChecked;
 	localStorage.setItem("array", JSON.stringify(objectArray));
+}
+function postSearchSpace(title) {
+	skills.innerHTML = "";
+	let checker = 0;
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	objectArray.forEach((object) => {
+		if (object.title === title && object.isChecked == false) {
+			console.log(object.title + "is equal to" + title);
+			cardCreator(object);
+			checker++;
+		}
+	});
+	if (checker === 0) {
+		noSearchObjectPresent();
+	}
+}
+function noSearchObjectPresent() {
+	skills.innerHTML = "";
+	let h2 = document.createElement("h2");
+	h2.innerText =
+		"No posts found - either it was deleted or you have given the wrong title press f5 to see the notes present.";
+	skills.appendChild(h2);
 }
