@@ -1,8 +1,10 @@
 let skills = document.querySelector(".skills");
 let submitButton = document.querySelector(".submitButton");
 let backUpButton = document.querySelector(".backUpButton");
+let deleteButton = document.querySelector(".deleteButton");
 submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
+deleteButton.addEventListener("click", deleteObject);
 let title = document.getElementById("name");
 let description = document.getElementById("Query");
 let date = document.getElementById("Number");
@@ -20,7 +22,7 @@ function createObject() {
 	if (object.title !== "" && object.description !== "" && object.date !== "") {
 		object.objectTime = new Date().getTime();
 		object.id = object.objectTime + Math.floor(Math.random() * 10000);
-		object.isDeleted = false;
+		object.isChecked = false;
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
 	} else {
@@ -47,7 +49,7 @@ function postSpace() {
 			}
 		});
 		objectArray.forEach((element) => {
-			if (element.isDeleted == false) {
+			if (element.isChecked == false) {
 				cardCreator(element);
 			}
 		});
@@ -58,14 +60,13 @@ function cardCreator(object) {
 	let title = document.createElement("h2");
 	let skillBody = document.createElement("div");
 	let date = document.createElement("p");
-	let deleteButton = document.createElement("input");
+	let checkbox = document.createElement("input");
 	let editButton = document.createElement("input");
+	checkbox.className = "checkBox";
 	skill.className = "skill";
 	skillBody.className = "skillBody";
-	deleteButton.type = "button";
+	checkbox.type = "checkbox";
 	deleteButton.value = "Delete";
-	deleteButton.id = "button";
-	deleteButton.className = "deleteButton";
 	editButton.type = "button";
 	editButton.value = "Edit";
 	editButton.id = "button";
@@ -73,13 +74,13 @@ function cardCreator(object) {
 	title.innerText = "Title:" + object.title;
 	skillBody.innerText = object.description;
 	date.innerText = "Dated:" + object.date;
+	skill.appendChild(checkbox);
 	skill.appendChild(title);
 	skill.appendChild(skillBody);
 	skill.appendChild(date);
-	skill.appendChild(deleteButton);
 	skill.appendChild(editButton);
 	skills.appendChild(skill);
-	deleteButton.addEventListener("click", () => deleteObject(object));
+	checkbox.addEventListener("click", () => cardChecked(object));
 	editButton.addEventListener("click", () => editObject(object));
 }
 function noObjectPresent() {
@@ -89,12 +90,8 @@ function noObjectPresent() {
 		"No posts found to display- fill the above form and click on the submit button to add posts to display here";
 	skills.appendChild(h2);
 }
-function deleteObject(object) {
-	alert("are you sure you want to delete?");
-	objectArray = JSON.parse(localStorage.getItem("array"));
-	indexToDelete = objectArray.findIndex((element) => element.id === object.id);
-	objectArray[indexToDelete].isDeleted = true;
-	localStorage.setItem("array", JSON.stringify(objectArray));
+function deleteObject() {
+	alert("are you sure you want to delete these posts?");
 	postSpace();
 }
 function editObject(object) {
@@ -137,13 +134,19 @@ function editObject(object) {
 function BackupObject() {
 	alert("are you sure you want to bring back the deleted posts?");
 	objectArray = JSON.parse(localStorage.getItem("array"));
-	console.log(objectArray);
 	objectArray.forEach((object) => {
-		if (object.isDeleted == true) {
-			object.isDeleted = false;
+		if (object.isChecked == true) {
+			object.isChecked = false;
 		}
 	});
-	console.log(objectArray);
 	localStorage.setItem("array", JSON.stringify(objectArray));
 	postSpace();
+}
+function cardChecked(object) {
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	let indexToCheck = objectArray.findIndex(
+		(element) => element.id === object.id
+	);
+	objectArray[indexToCheck].isChecked = !objectArray[indexToCheck].isChecked;
+	localStorage.setItem("array", JSON.stringify(objectArray));
 }

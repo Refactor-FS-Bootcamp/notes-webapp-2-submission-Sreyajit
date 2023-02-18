@@ -387,7 +387,7 @@ form>#button{
   align-items: center;
   width:10rem;
   height:10%;
-  margin: 1%;
+  /* margin: 1%; */
   padding:0;
 }
 form>#button:hover{
