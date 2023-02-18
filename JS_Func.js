@@ -7,6 +7,9 @@ submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
 let objectArray = [];
+addEventListener("beforeunload", () => {
+	localStorage.setItem("array", JSON.stringify(objectArray));
+});
 postSpace();
 searchButton.addEventListener("click", () =>
 	postSearchSpace(document.querySelector("#search").value)
@@ -16,8 +19,8 @@ let description = document.getElementById("Query");
 let date = document.getElementById("Number");
 let object = {};
 let objectTime;
+let id;
 function createObject() {
-	localStorage.setItem("array", JSON.stringify(objectArray));
 	object = {
 		title: title.value,
 		description: description.value,
@@ -27,6 +30,7 @@ function createObject() {
 		object.objectTime = new Date().getTime();
 		object.id = object.objectTime + Math.floor(Math.random() * 10000);
 		object.isChecked = false;
+		object.isEdited = false;
 		objectArray = JSON.parse(localStorage.getItem("array"));
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
@@ -37,6 +41,7 @@ function createObject() {
 }
 function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
+
 	if (
 		objectArray == null ||
 		objectArray.every((object) => object.isChecked == true)
@@ -83,6 +88,12 @@ function cardCreator(object) {
 	skill.appendChild(title);
 	skill.appendChild(skillBody);
 	skill.appendChild(date);
+	if (object.isEdited == true) {
+		let modified = document.createElement("p");
+		modified.innerText =
+			"Modified on: " + new Date(object.objectTime).toString();
+		skill.appendChild(modified);
+	}
 	skill.appendChild(editButton);
 	skills.appendChild(skill);
 	checkbox.addEventListener("click", () => cardChecked(object));
@@ -102,34 +113,32 @@ function deleteObject() {
 function editObject(object) {
 	alert("Are you sure you want to edit the post?");
 	objectArray = JSON.parse(localStorage.getItem("array"));
-	objectTime = object.objectTime;
-	indexToEdit = objectArray.findIndex(
-		(element) => element.objectTime === objectTime
-	);
+	id = object.id;
+	indexToEdit = objectArray.findIndex((element) => element.id === id);
 	title.focus();
 	title.placeholder = "Edit title here";
 	description.placeholder = "Edit description here";
 	date.placeholder = "Edit date here";
 	submitButton.value = "Save";
+	submitButton.removeEventListener("click", createObject);
+	title.value = "";
+	description.value = "";
+	date.value = "";
 	submitButton.addEventListener("click", () => {
 		alert("Are you sure you want to save the post?");
-		object = {
-			title: title.value,
-			description: description.value,
-			date: date.value,
-		};
-		if (
-			object.title !== "" &&
-			object.description !== "" &&
-			object.date !== ""
-		) {
+		if (title.value !== "" && description.value !== "" && date.value !== "") {
+			object.title = title.value;
+			object.description = description.value;
+			object.date = date.value;
 			object.objectTime = new Date().getTime();
+			object.isEdited = true;
 			objectArray[indexToEdit] = object;
 			localStorage.setItem("array", JSON.stringify(objectArray));
 			title.placeholder = "Write the title";
 			description.placeholder = "Write the description";
 			date.placeholder = "Give the date";
 			submitButton.value = "Submit";
+			submitButton.addEventListener("click", createObject);
 		} else {
 			alert("please fill the full form");
 		}
