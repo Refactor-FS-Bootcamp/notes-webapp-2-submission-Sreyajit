@@ -10,8 +10,7 @@ backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
 let objectArray = [];
 localStorage.setItem("array", JSON.stringify(objectArray));
-addEventListener("beforeunload", () => {
-});
+addEventListener("beforeunload", () => {});
 postSpace();
 searchButton.addEventListener("click", () =>
 	postSearchSpace(document.querySelector("#search").value)
@@ -67,6 +66,7 @@ function postSpace() {
 			backUpButton.style.display = "flex";
 		}
 		skills.innerHTML = "";
+		skillsArchived.innerHTML = "";
 		objectArray.sort((a, b) => {
 			if (a.objectTime > b.objectTime) {
 				return -1;
@@ -77,12 +77,18 @@ function postSpace() {
 			}
 		});
 		showAllButton.addEventListener("click", () => {
+			debugger;
+			console.log("click")
+			let title1 = document.createElement("h1");
+			title1.innerText = "Notes";
+			document.body.insertBefore(title1, skills);
 			skillsArchived.className = "skillsArchived";
-			document.body.appendChild(skillsArchived); // todo find why code execution is jumping from this line to  
-			skills.innerHTML = "<h1>Notes</h1>"; // and then back here
-			skillsArchived.innerHTML = "<h1>Archived Notes</h1>";
-		}); // finishing its execution here
-		objectArray.forEach((element) => { // to here
+			let title2 = document.createElement("h1");
+			title2.innerText = "Archived Notes";
+			document.body.appendChild(title2);
+			document.body.appendChild(skillsArchived);
+		});
+		objectArray.forEach((element) => {
 			if (element.isChecked == false) {
 				cardCreator(element);
 			}
