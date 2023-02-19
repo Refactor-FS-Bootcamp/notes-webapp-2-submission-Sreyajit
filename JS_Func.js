@@ -9,8 +9,8 @@ submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
 let objectArray = [];
-localStorage.setItem("array", JSON.stringify(objectArray));
 addEventListener("beforeunload", () => {});
+localStorage.setItem("array", JSON.stringify(objectArray));
 postSpace();
 searchButton.addEventListener("click", () =>
 	postSearchSpace(document.querySelector("#search").value)
@@ -21,6 +21,10 @@ let date = document.getElementById("Number");
 let object = {};
 let objectTime;
 let id;
+let title1 = document.createElement("h1");
+title1.innerText = "Notes";
+let title2 = document.createElement("h1");
+title2.innerText = "Archived Notes";
 function createObject() {
 	object = {
 		title: title.value,
@@ -75,16 +79,13 @@ function postSpace() {
 			} else {
 				return 0;
 			}
-		});
+		}); 
 		showAllButton.addEventListener("click", () => {
+			//todo find why this is getting called twice
 			debugger;
-			console.log("click")
-			let title1 = document.createElement("h1");
-			title1.innerText = "Notes";
+			console.log("it is clicked");
 			document.body.insertBefore(title1, skills);
 			skillsArchived.className = "skillsArchived";
-			let title2 = document.createElement("h1");
-			title2.innerText = "Archived Notes";
 			document.body.appendChild(title2);
 			document.body.appendChild(skillsArchived);
 		});
