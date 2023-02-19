@@ -1,4 +1,5 @@
 let skills = document.querySelector(".skills");
+let skillsArchived = document.createElement("div");
 let submitButton = document.querySelector(".submitButton");
 let backUpButton = document.querySelector(".backUpButton");
 let deleteButton = document.querySelector(".deleteButton");
@@ -8,8 +9,8 @@ submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
 let objectArray = [];
+localStorage.setItem("array", JSON.stringify(objectArray));
 addEventListener("beforeunload", () => {
-	localStorage.setItem("array", JSON.stringify(objectArray));
 });
 postSpace();
 searchButton.addEventListener("click", () =>
@@ -43,7 +44,6 @@ function createObject() {
 }
 function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
-	console.log(objectArray);
 	let allDeleted = objectArray.every((object) => object.isChecked == true);
 	let noneDeleted = objectArray.every((object) => object.isChecked == false);
 	let nullOrNot = objectArray == null;
@@ -76,9 +76,14 @@ function postSpace() {
 				return 0;
 			}
 		});
+		showAllButton.addEventListener("click", () => {
+			skillsArchived.className = "skillsArchived";
+			document.body.appendChild(skillsArchived);
+			skills.innerHTML = "<h1>Notes</h1>";
+			skillsArchived.innerHTML = "<h1>Archived Notes</h1>";
+		});
 		objectArray.forEach((element) => {
-			console.log(element);
-			if (element.isChecked == false && element.isArchived == false) {
+			if (element.isChecked == false) {
 				cardCreator(element);
 			}
 		});
@@ -118,8 +123,12 @@ function cardCreator(object) {
 		skill.appendChild(modified);
 	}
 	skill.appendChild(editButton);
-	skill.appendChild(archiveButton);
-	skills.appendChild(skill);
+	if (object.isArchived == false) {
+		skill.appendChild(archiveButton);
+		skills.appendChild(skill);
+	} else {
+		skillsArchived.appendChild(skill);
+	}
 	checkbox.addEventListener("click", () => cardChecked(object));
 	editButton.addEventListener("click", () => editObject(object));
 	archiveButton.addEventListener("click", () => archiveObject(object));
