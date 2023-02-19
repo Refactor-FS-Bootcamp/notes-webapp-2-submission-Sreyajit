@@ -78,11 +78,11 @@ function postSpace() {
 		});
 		showAllButton.addEventListener("click", () => {
 			skillsArchived.className = "skillsArchived";
-			document.body.appendChild(skillsArchived);
-			skills.innerHTML = "<h1>Notes</h1>";
+			document.body.appendChild(skillsArchived); // todo find why code execution is jumping from this line to  
+			skills.innerHTML = "<h1>Notes</h1>"; // and then back here
 			skillsArchived.innerHTML = "<h1>Archived Notes</h1>";
-		});
-		objectArray.forEach((element) => {
+		}); // finishing its execution here
+		objectArray.forEach((element) => { // to here
 			if (element.isChecked == false) {
 				cardCreator(element);
 			}
@@ -126,12 +126,12 @@ function cardCreator(object) {
 	if (object.isArchived == false) {
 		skill.appendChild(archiveButton);
 		skills.appendChild(skill);
+		archiveButton.addEventListener("click", () => archiveObject(object));
 	} else {
 		skillsArchived.appendChild(skill);
 	}
 	checkbox.addEventListener("click", () => cardChecked(object));
 	editButton.addEventListener("click", () => editObject(object));
-	archiveButton.addEventListener("click", () => archiveObject(object));
 }
 function noObjectPresent() {
 	skills.innerHTML = "";
