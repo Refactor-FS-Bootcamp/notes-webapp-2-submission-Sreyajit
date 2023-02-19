@@ -2,13 +2,11 @@ let skills = document.querySelector(".skills");
 let submitButton = document.querySelector(".submitButton");
 let backUpButton = document.querySelector(".backUpButton");
 let deleteButton = document.querySelector(".deleteButton");
-let archiveButton = document.querySelector(".archiveButton");
 let showAllButton = document.querySelector(".showAllButton");
 let searchButton = document.querySelector(".searchButton");
 submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
-archiveButton.addEventListener("click", archiveObject);
 let objectArray = [];
 addEventListener("beforeunload", () => {
 	localStorage.setItem("array", JSON.stringify(objectArray));
@@ -45,29 +43,27 @@ function createObject() {
 }
 function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
+	console.log(objectArray);
 	let allDeleted = objectArray.every((object) => object.isChecked == true);
 	let noneDeleted = objectArray.every((object) => object.isChecked == false);
 	let nullOrNot = objectArray == null;
-	if (nullOrNot) {
+	if (nullOrNot || objectArray.length == 0) {
 		deleteButton.style.display = "none";
 		showAllButton.style.display = "none";
-		archiveButton.style.display = "none";
 		backUpButton.style.display = "none";
+		noObjectPresent();
 	} else {
 		if (allDeleted) {
 			deleteButton.style.display = "none";
 			showAllButton.style.display = "none";
-			archiveButton.style.display = "none";
 			backUpButton.style.display = "flex";
 		} else if (noneDeleted) {
 			deleteButton.style.display = "flex";
 			showAllButton.style.display = "flex";
-			archiveButton.style.display = "flex";
 			backUpButton.style.display = "none";
 		} else {
 			deleteButton.style.display = "flex";
 			showAllButton.style.display = "flex";
-			archiveButton.style.display = "flex";
 			backUpButton.style.display = "flex";
 		}
 		skills.innerHTML = "";
@@ -81,7 +77,8 @@ function postSpace() {
 			}
 		});
 		objectArray.forEach((element) => {
-			if (element.isChecked == false) {
+			console.log(element);
+			if (element.isChecked == false && element.isArchived == false) {
 				cardCreator(element);
 			}
 		});
@@ -94,15 +91,19 @@ function cardCreator(object) {
 	let date = document.createElement("p");
 	let checkbox = document.createElement("input");
 	let editButton = document.createElement("input");
+	let archiveButton = document.createElement("input");
 	checkbox.className = "checkBox";
 	skill.className = "skill";
 	skillBody.className = "skillBody";
-	checkbox.type = "checkbox";
-	deleteButton.value = "Delete";
-	editButton.type = "button";
-	editButton.value = "Edit";
-	editButton.id = "button";
 	editButton.className = "editButton";
+	archiveButton.className = "archiveButton";
+	checkbox.type = "checkbox";
+	editButton.type = "button";
+	archiveButton.type = "button";
+	editButton.value = "Edit";
+	archiveButton.value = "Archive";
+	editButton.id = "button";
+	archiveButton.id = "button";
 	title.innerText = "Title:" + object.title;
 	skillBody.innerText = object.description;
 	date.innerText = "Dated:" + object.date;
@@ -117,9 +118,11 @@ function cardCreator(object) {
 		skill.appendChild(modified);
 	}
 	skill.appendChild(editButton);
+	skill.appendChild(archiveButton);
 	skills.appendChild(skill);
 	checkbox.addEventListener("click", () => cardChecked(object));
 	editButton.addEventListener("click", () => editObject(object));
+	archiveButton.addEventListener("click", () => archiveObject(object));
 }
 function noObjectPresent() {
 	skills.innerHTML = "";
@@ -192,7 +195,6 @@ function postSearchSpace(title) {
 	objectArray = JSON.parse(localStorage.getItem("array"));
 	objectArray.forEach((object) => {
 		if (object.title === title && object.isChecked == false) {
-			console.log(object.title + "is equal to" + title);
 			cardCreator(object);
 			checker++;
 		}
@@ -207,4 +209,13 @@ function noSearchObjectPresent() {
 	h2.innerText =
 		"No posts found - either it was deleted or you have given the wrong title press f5 to see the notes present.";
 	skills.appendChild(h2);
+}
+function archiveObject(object) {
+	objectArray = JSON.parse(localStorage.getItem("array"));
+	let indexToCheck = objectArray.findIndex(
+		(element) => element.id === object.id
+	);
+	objectArray[indexToCheck].isArchived = !objectArray[indexToCheck].isArchived;
+	localStorage.setItem("array", JSON.stringify(objectArray));
+	postSpace();
 }
