@@ -9,8 +9,9 @@ submitButton.addEventListener("click", createObject);
 backUpButton.addEventListener("click", BackupObject);
 deleteButton.addEventListener("click", deleteObject);
 let objectArray = [];
-addEventListener("beforeunload", () => {});
-localStorage.setItem("array", JSON.stringify(objectArray));
+addEventListener("beforeunload", () => {
+	localStorage.setItem("array", JSON.stringify(objectArray));
+});
 postSpace();
 searchButton.addEventListener("click", () =>
 	postSearchSpace(document.querySelector("#search").value)
@@ -49,6 +50,7 @@ function postSpace() {
 	objectArray = JSON.parse(localStorage.getItem("array"));
 	let allDeleted = objectArray.every((object) => object.isChecked == true);
 	let noneDeleted = objectArray.every((object) => object.isChecked == false);
+	let noneArchived = objectArray.every((object) => object.isArchived == false);
 	let nullOrNot = objectArray == null;
 	if (nullOrNot || objectArray.length == 0) {
 		deleteButton.style.display = "none";
@@ -79,15 +81,19 @@ function postSpace() {
 			} else {
 				return 0;
 			}
-		}); 
+		});
 		showAllButton.addEventListener("click", () => {
-			//todo find why this is getting called twice
-			debugger;
-			console.log("it is clicked");
 			document.body.insertBefore(title1, skills);
 			skillsArchived.className = "skillsArchived";
 			document.body.appendChild(title2);
 			document.body.appendChild(skillsArchived);
+			if (noneArchived) {
+				document.body.removeChild(title1);
+				document.body.removeChild(title2);
+				document.body.removeChild(skillsArchived);
+			} else {
+				document.body.removeChild(title1);
+			}
 		});
 		objectArray.forEach((element) => {
 			if (element.isChecked == false) {
@@ -125,6 +131,7 @@ function cardCreator(object) {
 	skill.appendChild(date);
 	if (object.isEdited == true) {
 		let modified = document.createElement("p");
+		modified.className = "modified";
 		modified.innerText =
 			"Modified on: " + new Date(object.objectTime).toString();
 		skill.appendChild(modified);
