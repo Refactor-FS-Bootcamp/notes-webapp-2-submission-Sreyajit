@@ -174,7 +174,7 @@ function editObject(object) {
 	title.value = "";
 	description.value = "";
 	date.value = "";
-	submitButton.addEventListener("click", () => {
+	submitButton.addEventListener("click", function edit() {
 		alert("Are you sure you want to save the post?");
 		if (title.value !== "" && description.value !== "" && date.value !== "") {
 			object.title = title.value;
@@ -188,10 +188,11 @@ function editObject(object) {
 			description.placeholder = "Write the description";
 			date.placeholder = "Give the date";
 			submitButton.value = "Submit";
-			submitButton.addEventListener("click", createObject);
 		} else {
 			alert("please fill the full form");
 		}
+		submitButton.removeEventListener("click", edit);
+		submitButton.addEventListener("click", createObject);
 		postSpace();
 	});
 }
