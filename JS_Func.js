@@ -51,6 +51,7 @@ function postSpace() {
 	let allDeleted = objectArray.every((object) => object.isChecked == true);
 	let noneDeleted = objectArray.every((object) => object.isChecked == false);
 	let noneArchived = objectArray.every((object) => object.isArchived == false);
+	let allArchived = objectArray.every((object) => object.isArchived == true);
 	let nullOrNot = objectArray == null;
 	if (nullOrNot || objectArray.length == 0) {
 		deleteButton.style.display = "none";
@@ -91,7 +92,8 @@ function postSpace() {
 				document.body.removeChild(title1);
 				document.body.removeChild(title2);
 				document.body.removeChild(skillsArchived);
-			} else {
+			}
+			if (allArchived) {
 				document.body.removeChild(title1);
 			}
 		});
@@ -214,8 +216,24 @@ function cardChecked(object) {
 }
 function postSearchSpace(title) {
 	skills.innerHTML = "";
+	skillsArchived.innerHTML = "";
 	let checker = 0;
 	objectArray = JSON.parse(localStorage.getItem("array"));
+	let noneArchived = objectArray.every((object) => object.isArchived == false);
+	let allArchived = objectArray.every((object) => object.isArchived == true);
+	debugger;
+	document.body.insertBefore(title1, skills);
+	skillsArchived.className = "skillsArchived";
+	document.body.appendChild(title2);
+	document.body.appendChild(skillsArchived);
+	if (noneArchived) {
+		document.body.removeChild(title1);
+		document.body.removeChild(title2);
+		document.body.removeChild(skillsArchived);
+	}
+	if (allArchived) {
+		document.body.removeChild(title1);
+	}
 	objectArray.forEach((object) => {
 		if (object.title === title && object.isChecked == false) {
 			cardCreator(object);
