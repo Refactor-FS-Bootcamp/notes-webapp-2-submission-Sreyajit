@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>NOTES-WEBAPP-2-SUBMISSION-SREYAJIT</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<!--[if lt IE 7]>
+			<p class="browsehappy"
+				>You are using an <strong>outdated</strong> browser. Please
+				<a href="#">upgrade your browser</a> to improve your experience.</p
+			>
+		<![endif]-->
+		<div class="searchSection">
+			<input
+				type="search"
+				name="search"
+				id="search"
+				placeholder="type to search notes by title" />
+			<input type="button" value="Search" class="searchButton" />
+		</div>
+		<form>
+			<h2 class="scrollable">Title:</h2>
+			<label for="name">
+				<input
+					type="text"
+					name="name"
+					id="name"
+					placeholder="Write the title"
+					required />
+			</label>
+			<h2>Description:</h2>
+			<label for="Query">
+				<input
+					type="text"
+					name="Query"
+					id="Query"
+					placeholder="Write Description here"
+					col="40"
+					row="10"
+					required />
+			</label>
+			<h2>Date:</h2>
+			<label for="Date">
+				<input
+					type="date"
+					name="Date"
+					id="Number"
+					title="Date"
+					placeholder="Give date here"
+					required />
+			</label>
+			<div class="buttons">
+				<input type="button" value="Submit" id="button" class="submitButton" />
+				<input type="button" value="Back Up" id="button" class="backUpButton" />
+				<input type="button" value="Delete" id="button" class="deleteButton" />
+				<input
+					type="button"
+					value="Show-All"
+					id="button"
+					class="showAllButton" />
+			</div>
+		</form>
+		<div class="skills"></div>
+		<script src="JS_Func.js"></script>
+	</body>
+</html>
