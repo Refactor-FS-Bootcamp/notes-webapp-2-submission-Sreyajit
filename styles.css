@@ -5,7 +5,7 @@ body {
 }
 #button {
 	justify-content: center;
-	font-family: "Courier New", Courier, monospace;
+	  font-family: 'Roboto', sans-serif;
 	font-weight: bold;
 	color: black;
 	background-color: white;
@@ -138,7 +138,7 @@ form > #button:hover {
 	gap: 5px;
 }
 .searchButton {
-	font-family: "Courier New", Courier, monospace;
+	  font-family: 'Roboto', sans-serif;
 	font-weight: bold;
 	border: 5px solid rgb(0, 98, 255);
 	width: 100px;
