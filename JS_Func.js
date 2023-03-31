@@ -41,6 +41,12 @@ function createObject() {
 		objectArray = JSON.parse(localStorage.getItem("array"));
 		objectArray.push(object);
 		localStorage.setItem("array", JSON.stringify(objectArray));
+		title.value = "";
+		description.value = "";
+		date.value = "";
+		title.placeholder = "Write title here";
+		description.placeholder = "Write description here";
+		date.placeholder = "Write date here";
 	} else {
 		alert("please fill the full form");
 	}
@@ -165,10 +171,10 @@ function editObject(object) {
 	objectArray = JSON.parse(localStorage.getItem("array"));
 	id = object.id;
 	indexToEdit = objectArray.findIndex((element) => element.id === id);
-	title.focus();
-	title.placeholder = "Edit title here";
-	description.placeholder = "Edit description here";
-	date.placeholder = "Edit date here";
+	document.querySelector(".scrollable").scrollIntoView({ behavior: "smooth" });
+	title.placeholder = object.title + "(Edit title here)";
+	description.placeholder = object.description + "(Edit description here)";
+	date.placeholder = object.date + "(Edit date here)";
 	submitButton.value = "Save";
 	submitButton.removeEventListener("click", createObject);
 	title.value = "";
